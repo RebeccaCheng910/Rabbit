@@ -6,30 +6,30 @@ import uchicago.src.sim.space.Object2DGrid;
  */
 
 public class RabbitsGrassSimulationSpace {
-	private Object2DGrid rabbitSpace;
+	private Object2DGrid grassSpace;
 	
 	public RabbitsGrassSimulationSpace(int xSize, int ySize){
-		rabbitSpace = new Object2DGrid(xSize, ySize);
+		grassSpace = new Object2DGrid(xSize, ySize);
 	    for(int i = 0; i < xSize; i++){
 	      for(int j = 0; j < ySize; j++){
-	    	  rabbitSpace.putObjectAt(i,j,new Integer(0));
+	    	  grassSpace.putObjectAt(i,j,new Integer(0));
 	      }
 	    }
 	}
 	
-	public void spreadRabbits(int numRabbits){
+	public void spreadGrass(int totalGrass){
 	    // Randomly place money in moneySpace
 		int i = 0;
-		while (i < numRabbits) {
+		while (i < totalGrass) {
 	
 	      // Choose coordinates
-	      int x = (int)(Math.random()*(rabbitSpace.getSizeX()));
-	      int y = (int)(Math.random()*(rabbitSpace.getSizeY()));
+	      int x = (int)(Math.random()*(grassSpace.getSizeX()));
+	      int y = (int)(Math.random()*(grassSpace.getSizeY()));
 	      
 	      // Get the value of the object at those coordinates
-	      int currentValue = getRabbitAt(x, y);
+	      int currentValue = getGrassAt(x, y);
 	      if (currentValue == 0) {
-		      rabbitSpace.putObjectAt(x,y,new Integer(1));
+	    	  grassSpace.putObjectAt(x,y,new Integer(1));
 		      ++i;
 	      } else {
 	    	  continue;
@@ -37,10 +37,10 @@ public class RabbitsGrassSimulationSpace {
 	    }
 	  }
 	
-	public int getRabbitAt(int x, int y){
+	public int getGrassAt(int x, int y){
 	    int i;
-	    if(rabbitSpace.getObjectAt(x,y)!= null){
-	      i = ((Integer)rabbitSpace.getObjectAt(x,y)).intValue();
+	    if(grassSpace.getObjectAt(x,y)!= null){
+	      i = ((Integer)grassSpace.getObjectAt(x,y)).intValue();
 	    }
 	    else{
 	      i = 0;
@@ -48,8 +48,8 @@ public class RabbitsGrassSimulationSpace {
 	    return i;
 	}
 	
-	public Object2DGrid getCurrentRabbitSpace(){
-	    return rabbitSpace;
+	public Object2DGrid getCurrentGrassSpace(){
+	    return grassSpace;
 	  }
 	
 }
