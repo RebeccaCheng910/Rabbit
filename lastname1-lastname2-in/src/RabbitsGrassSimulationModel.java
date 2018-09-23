@@ -1,12 +1,15 @@
 import java.awt.Color;
 import java.util.ArrayList;
 
+import uchicago.src.sim.engine.BasicAction;
 import uchicago.src.sim.engine.Schedule;
 import uchicago.src.sim.engine.SimInit;
 import uchicago.src.sim.engine.SimModelImpl;
 import uchicago.src.sim.gui.DisplaySurface;
 import uchicago.src.sim.gui.ColorMap;
+import uchicago.src.sim.gui.Object2DDisplay;
 import uchicago.src.sim.gui.Value2DDisplay;
+import uchicago.src.sim.util.SimUtilities;
 
 /**
  * Class that implements the simulation model for the rabbits grass
@@ -51,7 +54,6 @@ public class RabbitsGrassSimulationModel extends SimModelImpl {
 		}
 
 		public void begin() {
-			// TODO Auto-generated method stub
 			buildModel();
 			buildSchedule();
 			buildDisplay();
@@ -79,9 +81,54 @@ public class RabbitsGrassSimulationModel extends SimModelImpl {
 			agentList.add(a);
 			rgSpace.addAgent(a);
 		}
+		
+		private void reapDeadAgents() {
+			int count = 0;
+		    for(int i = (agentList.size() - 1); i >= 0 ; i--){
+		    	RabbitsGrassSimulationAgent rga = (RabbitsGrassSimulationAgent)agentList.get(i);
+		    	if(rga.getCurrentLife() < 1) {
+		    		rgSpace.removeAgentAt(rga.getX(), rga.getY());
+		    		agentList.remove(i);
+		    	}
+		    }
+		}
+		
+		private int countLivingAgents() {
+			int livingAgents = 0;
+			for(int i = 0; i < agentList.size(); i++){
+				RabbitsGrassSimulationAgent rga = (RabbitsGrassSimulationAgent)agentList.get(i);
+			      if(rga.getCurrentLife() > 0) livingAgents++;
+			}
+			System.out.println("Number of living agents is: " + livingAgents);
+
+		    return livingAgents;
+		}
 
 		public void buildSchedule() {
 			System.out.println("Running BuildSchedule");
+			
+			// Schedule : Get agents to age
+		    class RabbitsGrassStimulationStep extends BasicAction {
+		    	public void execute() {
+		            SimUtilities.shuffle(agentList);
+		            for(int i =0; i < agentList.size(); i++){
+		            	RabbitsGrassSimulationAgent rga = (RabbitsGrassSimulationAgent)agentList.get(i);
+		            	rga.step();
+		            }
+		            
+		            reapDeadAgents();
+		            displaySurf.updateDisplay();
+		        }
+		    }
+		    schedule.scheduleActionBeginning(0, new RabbitsGrassStimulationStep());
+		    
+		    // Schedule : Counts agents with stepsToLive above 0
+		    class RabbitsGrassStimulationCountLiving extends BasicAction {
+		    	public void execute() {
+		    		countLivingAgents();
+		    	}
+		    }
+		    schedule.scheduleActionAtInterval(10, new RabbitsGrassStimulationCountLiving());
 		}
 		
 		public void buildDisplay() {
@@ -97,7 +144,11 @@ public class RabbitsGrassSimulationModel extends SimModelImpl {
 		    Value2DDisplay displayGrass = 
 		        new Value2DDisplay(rgSpace.getCurrentGrassSpace(), map);
 
+		    Object2DDisplay displayAgents = new Object2DDisplay(rgSpace.getCurrentAgentSpace());
+		    displayAgents.setObjectList(agentList);
+
 		    displaySurf.addDisplayable(displayGrass, "Grass");
+		    displaySurf.addDisplayable(displayAgents, "Agents");
 		}
 
 		public String getName() {
@@ -114,6 +165,7 @@ public class RabbitsGrassSimulationModel extends SimModelImpl {
 			System.out.println("Running setup");
 			rgSpace = null;
 			agentList = new ArrayList();
+		    schedule = new Schedule(1);
 			
 			if (displaySurf != null){
 			      displaySurf.dispose();

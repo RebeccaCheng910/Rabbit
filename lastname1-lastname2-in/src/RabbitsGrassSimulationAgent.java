@@ -1,3 +1,5 @@
+import java.awt.Color;
+
 import uchicago.src.sim.gui.Drawable;
 import uchicago.src.sim.gui.SimGraphics;
 
@@ -17,19 +19,20 @@ public class RabbitsGrassSimulationAgent implements Drawable {
 	private int ID;
 	
 	public void draw(SimGraphics arg0) {
-		// TODO Auto-generated method stub
-		
+		arg0.drawFastRoundRect(Color.blue);		
 	}
 
 	public int getX() {
-		// TODO Auto-generated method stub
-		return 0;
+		return x;
 	}
 
 	public int getY() {
-		// TODO Auto-generated method stub
-		return 0;
+		return y;
 	}
+	
+	public void step(){
+		currentLife--;
+	  }
 	
 	public RabbitsGrassSimulationAgent(int currentLife, int reproductionEnergyLevel) {
 		this.x = -1;
@@ -67,6 +70,5 @@ public class RabbitsGrassSimulationAgent implements Drawable {
 		                       " and " + 
 		                       untilReprod + " energy until reproduction.");
 		  }
-
 
 }
