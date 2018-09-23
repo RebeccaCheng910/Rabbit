@@ -97,7 +97,7 @@ public class RabbitsGrassSimulationModel extends SimModelImpl {
 		    Value2DDisplay displayGrass = 
 		        new Value2DDisplay(rgSpace.getCurrentGrassSpace(), map);
 
-		    displaySurf.addDisplayable(displayGrass, "Grass");
+		    displaySurf.addDisplayableProbeable(displayGrass, "Grass");
 		}
 
 		public String getName() {
