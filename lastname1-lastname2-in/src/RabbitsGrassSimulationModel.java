@@ -17,8 +17,8 @@ public class RabbitsGrassSimulationModel extends SimModelImpl {
 		
 		// Default Values
 	    private static final int NUMAGENTS = 100;
-    	private static final int WORLDXSIZE = 40;
-		private static final int WORLDYSIZE = 40;
+	    private static final int WORLDXSIZE = 40;
+	    private static final int WORLDYSIZE = 40;
 		  
 		private int numAgents = NUMAGENTS;
 		private int worldXSize = WORLDXSIZE;
@@ -40,15 +40,15 @@ public class RabbitsGrassSimulationModel extends SimModelImpl {
 		}
 		
 		public void buildModel() {
-			
+			System.out.println("Running BuildModel");
 		}
 		
 		public void buildSchedule() {
-			
+			System.out.println("Running BuildSchedule");
 		}
 		
 		public void buildDisplay() {
-			
+			System.out.println("Running BuildDisplay");
 		}
 
 		public String getName() {
@@ -62,8 +62,7 @@ public class RabbitsGrassSimulationModel extends SimModelImpl {
 		}
 
 		public void setup() {
-			// TODO Auto-generated method stub
-			
+			System.out.println("Running setup");
 		}
 		
 		public String[] getInitParam() {
