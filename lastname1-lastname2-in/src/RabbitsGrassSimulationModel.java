@@ -1,11 +1,6 @@
-import java.awt.Color;
-
 import uchicago.src.sim.engine.Schedule;
 import uchicago.src.sim.engine.SimInit;
 import uchicago.src.sim.engine.SimModelImpl;
-import uchicago.src.sim.gui.DisplaySurface;
-import uchicago.src.sim.gui.ColorMap;
-import uchicago.src.sim.gui.Value2DDisplay;
 
 /**
  * Class that implements the simulation model for the rabbits grass
@@ -20,20 +15,14 @@ import uchicago.src.sim.gui.Value2DDisplay;
 public class RabbitsGrassSimulationModel extends SimModelImpl {		
 		private Schedule schedule;
 		
-		private RabbitsGrassSimulationSpace rgSpace;
-		
-		private DisplaySurface displaySurf;
-		
 		// Default Values
 	    private static final int NUMAGENTS = 100;
 	    private static final int WORLDXSIZE = 40;
 	    private static final int WORLDYSIZE = 40;
-	    private static final int TOTALRABBIT = 100;
 		  
 		private int numAgents = NUMAGENTS;
 		private int worldXSize = WORLDXSIZE;
 		private int worldYSize = WORLDYSIZE;
-		private int numRabbits = TOTALRABBIT;
 		
 		public static void main(String[] args) {
 			
@@ -48,14 +37,10 @@ public class RabbitsGrassSimulationModel extends SimModelImpl {
 			buildModel();
 			buildSchedule();
 			buildDisplay();
-			
-			displaySurf.display();
 		}
 		
 		public void buildModel() {
 			System.out.println("Running BuildModel");
-			rgSpace = new RabbitsGrassSimulationSpace(worldXSize, worldYSize);
-			rgSpace.spreadRabbits(numRabbits);
 		}
 		
 		public void buildSchedule() {
@@ -64,18 +49,6 @@ public class RabbitsGrassSimulationModel extends SimModelImpl {
 		
 		public void buildDisplay() {
 			System.out.println("Running BuildDisplay");
-			
-			ColorMap map = new ColorMap();
-
-		    for(int i = 1; i<16; i++){
-		      map.mapColor(i, new Color((int)(i * 8 + 127), 0, 0));
-		    }
-		    map.mapColor(0, Color.white);
-
-		    Value2DDisplay displayRabbit = 
-		        new Value2DDisplay(rgSpace.getCurrentRabbitSpace(), map);
-
-		    displaySurf.addDisplayable(displayRabbit, "Rabbit");
 		}
 
 		public String getName() {
@@ -90,19 +63,10 @@ public class RabbitsGrassSimulationModel extends SimModelImpl {
 
 		public void setup() {
 			System.out.println("Running setup");
-			rgSpace = null;
-			
-			if (displaySurf != null){
-			      displaySurf.dispose();
-			}
-			displaySurf = null;
-			displaySurf = new DisplaySurface(this, "Carry Drop Model Window 1");
-			
-			registerDisplaySurface("Carry Drop Model Window 1", displaySurf);
 		}
 		
 		public String[] getInitParam() {
-			String[] initParams = {"NumAgents", "WorldXSize", "WorldYSize", "Rabbit"};
+			String[] initParams = {"NumAgents", "WorldXSize", "WorldYSize"};
 			return initParams;
 		}
 		
@@ -128,14 +92,6 @@ public class RabbitsGrassSimulationModel extends SimModelImpl {
 
 		public void setWorldYSize(int wys){
 			worldYSize = wys;
-		}
-		
-		public int getRabbit(){
-			return numRabbits;
-		}
-
-		public void setRabbit(int i){
-			numRabbits = i;
 		}
 }
 
