@@ -68,11 +68,16 @@ public class RabbitsGrassSimulationModel extends SimModelImpl {
 			{
 				addNewAgent();
 			}
+		    for(int i = 0; i < agentList.size(); i++){
+		        RabbitsGrassSimulationAgent rga = (RabbitsGrassSimulationAgent)agentList.get(i);
+		        rga.report();
+		      }			
 		}
 		
 		private void addNewAgent(){
 			RabbitsGrassSimulationAgent a = new RabbitsGrassSimulationAgent(agentMinLifespan, agentReproductionLevel);
 			agentList.add(a);
+			rgSpace.addAgent(a);
 		}
 
 		public void buildSchedule() {
