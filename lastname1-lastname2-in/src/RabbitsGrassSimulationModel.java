@@ -31,7 +31,6 @@ public class RabbitsGrassSimulationModel extends SimModelImpl {
 	    private static final int NUMAGENTS = 100;
 	    private static final int WORLDXSIZE = 40;
 	    private static final int WORLDYSIZE = 40;
-	    private static final int TOTALRABBIT = 100;
 	    private static final int AGENT_MIN_LIFESPAN = 30;
 	    private static final int REPROD = 50;
 	    private static final int TOTALGRASS = 70;
@@ -39,7 +38,6 @@ public class RabbitsGrassSimulationModel extends SimModelImpl {
 		private int numAgents = NUMAGENTS;
 		private int worldXSize = WORLDXSIZE;
 		private int worldYSize = WORLDYSIZE;
-		private int numRabbits = TOTALRABBIT;
 		private int agentMinLifespan = AGENT_MIN_LIFESPAN;
 		private int agentReproductionLevel = REPROD;
 		private int totalGrass = TOTALGRASS;
@@ -66,7 +64,7 @@ public class RabbitsGrassSimulationModel extends SimModelImpl {
 			rgSpace = new RabbitsGrassSimulationSpace(worldXSize, worldYSize);
 			rgSpace.spreadGrass(totalGrass);
 			
-			for(int i = 0; i < numRabbits; i++)
+			for(int i = 0; i < numAgents; i++)
 			{
 				addNewAgent();
 			}
@@ -94,7 +92,7 @@ public class RabbitsGrassSimulationModel extends SimModelImpl {
 		    Value2DDisplay displayGrass = 
 		        new Value2DDisplay(rgSpace.getCurrentGrassSpace(), map);
 
-		    displaySurf.addDisplayable(displayGrass, "Rabbit");
+		    displaySurf.addDisplayable(displayGrass, "Grass");
 		}
 
 		public String getName() {
@@ -122,7 +120,7 @@ public class RabbitsGrassSimulationModel extends SimModelImpl {
 		}
 		
 		public String[] getInitParam() {
-			String[] initParams = {"NumAgents", "WorldXSize", "WorldYSize", "Rabbit",
+			String[] initParams = {"NumAgents", "WorldXSize", "WorldYSize", "TotalGrass",
 					"AgentMinLifespan", "AgentMaxLifespan"};
 			return initParams;
 		}
@@ -151,12 +149,12 @@ public class RabbitsGrassSimulationModel extends SimModelImpl {
 			worldYSize = wys;
 		}
 		
-		public int getRabbit(){
-			return numRabbits;
+		public int getTotalGrass(){
+			return totalGrass;
 		}
 
-		public void setRabbit(int i){
-			numRabbits = i;
+		public void setTotalGrass(int i){
+			totalGrass = i;
 		}
 		
 		public int getAgentReproductionLevel(){

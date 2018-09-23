@@ -36,6 +36,10 @@ public class RabbitsGrassSimulationAgent implements Drawable {
 		this.reproductionEnergyLevel = reproductionEnergyLevel;
 	}
 	
-	
+	public void setXY(int newX, int newY){
+	    x = newX;
+	    y = newY;
+	  }
+
 
 }
