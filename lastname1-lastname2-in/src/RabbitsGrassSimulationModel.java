@@ -34,6 +34,7 @@ public class RabbitsGrassSimulationModel extends SimModelImpl {
 	    private static final int TOTALRABBIT = 100;
 	    private static final int AGENT_MIN_LIFESPAN = 30;
 	    private static final int REPROD = 50;
+	    private static final int TOTALGRASS = 70;
 		  
 		private int numAgents = NUMAGENTS;
 		private int worldXSize = WORLDXSIZE;
@@ -41,6 +42,7 @@ public class RabbitsGrassSimulationModel extends SimModelImpl {
 		private int numRabbits = TOTALRABBIT;
 		private int agentMinLifespan = AGENT_MIN_LIFESPAN;
 		private int agentReproductionLevel = REPROD;
+		private int totalGrass = TOTALGRASS;
 		
 		public static void main(String[] args) {
 			
@@ -62,7 +64,7 @@ public class RabbitsGrassSimulationModel extends SimModelImpl {
 		public void buildModel() {
 			System.out.println("Running BuildModel");
 			rgSpace = new RabbitsGrassSimulationSpace(worldXSize, worldYSize);
-			rgSpace.spreadRabbits(numRabbits);
+			rgSpace.spreadGrass(totalGrass);
 			
 			for(int i = 0; i < numRabbits; i++)
 			{
@@ -89,10 +91,10 @@ public class RabbitsGrassSimulationModel extends SimModelImpl {
 		    }
 		    map.mapColor(0, Color.white);
 
-		    Value2DDisplay displayRabbit = 
-		        new Value2DDisplay(rgSpace.getCurrentRabbitSpace(), map);
+		    Value2DDisplay displayGrass = 
+		        new Value2DDisplay(rgSpace.getCurrentGrassSpace(), map);
 
-		    displaySurf.addDisplayable(displayRabbit, "Rabbit");
+		    displaySurf.addDisplayable(displayGrass, "Rabbit");
 		}
 
 		public String getName() {
