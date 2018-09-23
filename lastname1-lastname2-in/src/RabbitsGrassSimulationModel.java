@@ -1,4 +1,5 @@
 import java.awt.Color;
+import java.util.ArrayList;
 
 import uchicago.src.sim.engine.Schedule;
 import uchicago.src.sim.engine.SimInit;
@@ -24,16 +25,22 @@ public class RabbitsGrassSimulationModel extends SimModelImpl {
 		
 		private DisplaySurface displaySurf;
 		
+		private ArrayList agentList;
+		
 		// Default Values
 	    private static final int NUMAGENTS = 100;
 	    private static final int WORLDXSIZE = 40;
 	    private static final int WORLDYSIZE = 40;
 	    private static final int TOTALRABBIT = 100;
+	    private static final int AGENT_MIN_LIFESPAN = 30;
+	    private static final int REPROD = 50;
 		  
 		private int numAgents = NUMAGENTS;
 		private int worldXSize = WORLDXSIZE;
 		private int worldYSize = WORLDYSIZE;
 		private int numRabbits = TOTALRABBIT;
+		private int agentMinLifespan = AGENT_MIN_LIFESPAN;
+		private int agentReproductionLevel = REPROD;
 		
 		public static void main(String[] args) {
 			
@@ -56,8 +63,18 @@ public class RabbitsGrassSimulationModel extends SimModelImpl {
 			System.out.println("Running BuildModel");
 			rgSpace = new RabbitsGrassSimulationSpace(worldXSize, worldYSize);
 			rgSpace.spreadRabbits(numRabbits);
+			
+			for(int i = 0; i < numRabbits; i++)
+			{
+				addNewAgent();
+			}
 		}
 		
+		private void addNewAgent(){
+			RabbitsGrassSimulationAgent a = new RabbitsGrassSimulationAgent(agentMinLifespan, agentReproductionLevel);
+			agentList.add(a);
+		}
+
 		public void buildSchedule() {
 			System.out.println("Running BuildSchedule");
 		}
@@ -91,18 +108,20 @@ public class RabbitsGrassSimulationModel extends SimModelImpl {
 		public void setup() {
 			System.out.println("Running setup");
 			rgSpace = null;
+			agentList = new ArrayList();
 			
 			if (displaySurf != null){
 			      displaySurf.dispose();
 			}
 			displaySurf = null;
-			displaySurf = new DisplaySurface(this, "Carry Drop Model Window 1");
+			displaySurf = new DisplaySurface(this, "Rabbit Sim Model Window 1");
 			
-			registerDisplaySurface("Carry Drop Model Window 1", displaySurf);
+			registerDisplaySurface("Rabbit Sim Model Window 1", displaySurf);
 		}
 		
 		public String[] getInitParam() {
-			String[] initParams = {"NumAgents", "WorldXSize", "WorldYSize", "Rabbit"};
+			String[] initParams = {"NumAgents", "WorldXSize", "WorldYSize", "Rabbit",
+					"AgentMinLifespan", "AgentMaxLifespan"};
 			return initParams;
 		}
 		
@@ -136,6 +155,22 @@ public class RabbitsGrassSimulationModel extends SimModelImpl {
 
 		public void setRabbit(int i){
 			numRabbits = i;
+		}
+		
+		public int getAgentReproductionLevel(){
+			return agentReproductionLevel;
+		}
+
+		public void setAgentReproductionLevel(int level){
+			agentReproductionLevel = level;
+		}
+		
+		public int getAgentMinLifespan(){
+			return agentMinLifespan;
+		}
+
+		public void setAgentMinLifespan(int life){
+			agentMinLifespan = life;
 		}
 }
 

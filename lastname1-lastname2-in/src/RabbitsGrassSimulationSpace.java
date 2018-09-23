@@ -19,16 +19,21 @@ public class RabbitsGrassSimulationSpace {
 	
 	public void spreadRabbits(int numRabbits){
 	    // Randomly place money in moneySpace
-	    for(int i = 0; i < numRabbits; i++){
-
+		int i = 0;
+		while (i < numRabbits) {
+	
 	      // Choose coordinates
 	      int x = (int)(Math.random()*(rabbitSpace.getSizeX()));
 	      int y = (int)(Math.random()*(rabbitSpace.getSizeY()));
 	      
 	      // Get the value of the object at those coordinates
 	      int currentValue = getRabbitAt(x, y);
-	      // Replace the Integer object with another one with the new value
-	      rabbitSpace.putObjectAt(x,y,new Integer(currentValue + 1));
+	      if (currentValue == 0) {
+		      rabbitSpace.putObjectAt(x,y,new Integer(1));
+		      ++i;
+	      } else {
+	    	  continue;
+	      }
 	    }
 	  }
 	

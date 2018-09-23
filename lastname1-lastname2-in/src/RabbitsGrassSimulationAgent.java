@@ -9,7 +9,11 @@ import uchicago.src.sim.gui.SimGraphics;
  */
 
 public class RabbitsGrassSimulationAgent implements Drawable {
-
+	private int x;
+	private int y;
+	private int minLifespan;
+	private int reproductionEnergyLevel;
+	
 	public void draw(SimGraphics arg0) {
 		// TODO Auto-generated method stub
 		
@@ -24,5 +28,14 @@ public class RabbitsGrassSimulationAgent implements Drawable {
 		// TODO Auto-generated method stub
 		return 0;
 	}
+	
+	public RabbitsGrassSimulationAgent(int minLifespan, int reproductionEnergyLevel) {
+		this.x = -1;
+		this.y = -1;
+		this.minLifespan = minLifespan;
+		this.reproductionEnergyLevel = reproductionEnergyLevel;
+	}
+	
+	
 
 }
