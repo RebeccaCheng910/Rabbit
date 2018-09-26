@@ -16,6 +16,7 @@ public class RabbitsGrassSimulationAgent implements Drawable {
 	private int vX;
 	private int vY;
 	private int reproductionEnergyLevel;
+	private int reproductionEnergyCost;
 	private int currentLife;
 	private static int IDNumber = 0;
 	private int ID;
@@ -37,12 +38,13 @@ public class RabbitsGrassSimulationAgent implements Drawable {
 		return y;
 	}
 	
-	public RabbitsGrassSimulationAgent(int currentLife, int reproductionEnergyLevel) {
+	public RabbitsGrassSimulationAgent(int currentLife, int reproductionEnergyLevel, int reproductionEnergyCost) {
 		this.x = -1;
 		this.y = -1;
 		setVxVy();
 		this.currentLife = currentLife;
 		this.reproductionEnergyLevel = reproductionEnergyLevel;
+		this.reproductionEnergyCost = reproductionEnergyCost;
 		IDNumber++;
 		ID = IDNumber;
 	}
@@ -99,6 +101,10 @@ public class RabbitsGrassSimulationAgent implements Drawable {
 	    	setVxVy();
 	    }
 	    currentLife--;
+	}
+	
+	public void reproduce() {
+		currentLife -= reproductionEnergyCost;
 	}
 
 	private boolean tryMove(int newX, int newY){

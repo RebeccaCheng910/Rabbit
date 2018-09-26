@@ -34,16 +34,21 @@ public class RabbitsGrassSimulationModel extends SimModelImpl {
 	    private static final int NUMAGENTS = 100;
 	    private static final int WORLDXSIZE = 40;
 	    private static final int WORLDYSIZE = 40;
-	    private static final int AGENT_MIN_LIFESPAN = 30;
-	    private static final int REPROD = 50;
-	    private static final int TOTALGRASS = 70;
+	    private static final int AGENT_START_LIFE = 100;
+	    private static final int REPRODLEVEL = 130;
+	    private static final int REPRODCOST = 30;
+	    private static final int TOTALGRASS = 170;
+	    private static final int GRASS_GROWTH_RATE = 50;
 		  
 		private int numAgents = NUMAGENTS;
 		private int worldXSize = WORLDXSIZE;
 		private int worldYSize = WORLDYSIZE;
-		private int agentMinLifespan = AGENT_MIN_LIFESPAN;
-		private int agentReproductionLevel = REPROD;
+		private int agentStartLife = AGENT_START_LIFE;
+		private int agentReproductionLevel = REPRODLEVEL;
+		private int agentReproductionEnergyCost = REPRODCOST;
 		private int totalGrass = TOTALGRASS;
+		private int grassGrowthRate = GRASS_GROWTH_RATE;
+		
 		
 		public static void main(String[] args) {
 			
@@ -77,13 +82,12 @@ public class RabbitsGrassSimulationModel extends SimModelImpl {
 		}
 		
 		private void addNewAgent(){
-			RabbitsGrassSimulationAgent a = new RabbitsGrassSimulationAgent(agentMinLifespan, agentReproductionLevel);
-			agentList.add(a);
+			RabbitsGrassSimulationAgent a = new RabbitsGrassSimulationAgent(agentStartLife, agentReproductionLevel, agentReproductionEnergyCost);
 			rgSpace.addAgent(a);
+			agentList.add(a);
 		}
 		
 		private void reapDeadAgents() {
-			int count = 0;
 		    for(int i = (agentList.size() - 1); i >= 0 ; i--){
 		    	RabbitsGrassSimulationAgent rga = (RabbitsGrassSimulationAgent)agentList.get(i);
 		    	if(rga.getCurrentLife() < 1) {
@@ -113,10 +117,15 @@ public class RabbitsGrassSimulationModel extends SimModelImpl {
 		            SimUtilities.shuffle(agentList);
 		            for(int i =0; i < agentList.size(); i++){
 		            	RabbitsGrassSimulationAgent rga = (RabbitsGrassSimulationAgent)agentList.get(i);
-		            	rga.step();
+		            	if(rga.getCurrentLife() >= agentReproductionLevel) {
+		            		rga.reproduce();
+		            		addNewAgent();
+		            	} else {
+		            		rga.step();
+		            	}
 		            }
-		            
 		            reapDeadAgents();
+		            rgSpace.spreadGrass(grassGrowthRate);
 		            displaySurf.updateDisplay();
 		        }
 		    }
@@ -177,8 +186,7 @@ public class RabbitsGrassSimulationModel extends SimModelImpl {
 		}
 		
 		public String[] getInitParam() {
-			String[] initParams = {"NumAgents", "WorldXSize", "WorldYSize", "TotalGrass",
-					"AgentMinLifespan", "AgentMaxLifespan"};
+			String[] initParams = {"NumAgents", "WorldXSize", "WorldYSize", "TotalGrass", "GrassGrowthRate", "AgentStartLife"};
 			return initParams;
 		}
 		
@@ -214,6 +222,14 @@ public class RabbitsGrassSimulationModel extends SimModelImpl {
 			totalGrass = i;
 		}
 		
+		public int getGrassGrowthRate(){
+			return grassGrowthRate;
+		}
+
+		public void setGrassGrowthRate(int i){
+			grassGrowthRate = i;
+		}
+		
 		public int getAgentReproductionLevel(){
 			return agentReproductionLevel;
 		}
@@ -222,12 +238,20 @@ public class RabbitsGrassSimulationModel extends SimModelImpl {
 			agentReproductionLevel = level;
 		}
 		
-		public int getAgentMinLifespan(){
-			return agentMinLifespan;
+		public int getAgentReproductionEnergyCost(){
+			return agentReproductionEnergyCost;
 		}
 
-		public void setAgentMinLifespan(int life){
-			agentMinLifespan = life;
+		public void setAgentReproductionEnergyCost(int cost){
+			agentReproductionEnergyCost = cost;
+		}
+		
+		public int getAgentStartLife(){
+			return agentStartLife;
+		}
+
+		public void setAgentStartLife(int life){
+			agentStartLife = life;
 		}
 }
 
