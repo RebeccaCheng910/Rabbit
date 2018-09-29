@@ -31,14 +31,14 @@ public class RabbitsGrassSimulationModel extends SimModelImpl {
 		private ArrayList agentList;
 		
 		// Default Values
-	    private static final int NUMAGENTS = 100;
-	    private static final int WORLDXSIZE = 40;
-	    private static final int WORLDYSIZE = 40;
-	    private static final int AGENT_START_LIFE = 100;
-	    private static final int REPRODLEVEL = 130;
-	    private static final int REPRODCOST = 30;
-	    private static final int TOTALGRASS = 170;
-	    private static final int GRASS_GROWTH_RATE = 50;
+	    private static final int NUMAGENTS = 1;
+	    private static final int WORLDXSIZE = 5;
+	    private static final int WORLDYSIZE = 5;
+	    private static final int AGENT_START_LIFE = 90;
+	    private static final int REPRODLEVEL = 10;
+	    private static final int REPRODCOST = 7;
+	    private static final int TOTALGRASS = 3;
+	    private static final int GRASS_GROWTH_RATE = 0;
 		  
 		private int numAgents = NUMAGENTS;
 		private int worldXSize = WORLDXSIZE;
@@ -120,9 +120,9 @@ public class RabbitsGrassSimulationModel extends SimModelImpl {
 		            	if(rga.getCurrentLife() >= agentReproductionLevel) {
 		            		rga.reproduce();
 		            		addNewAgent();
-		            	} else {
-		            		rga.step();
 		            	}
+		            	rga.step();
+		       
 		            }
 		            reapDeadAgents();
 		            rgSpace.spreadGrass(grassGrowthRate);
@@ -137,7 +137,7 @@ public class RabbitsGrassSimulationModel extends SimModelImpl {
 		    		countLivingAgents();
 		    	}
 		    }
-		    schedule.scheduleActionAtInterval(10, new RabbitsGrassStimulationCountLiving());
+		    schedule.scheduleActionAtInterval(1, new RabbitsGrassStimulationCountLiving());
 		}
 		
 		public void buildDisplay() {
@@ -156,7 +156,9 @@ public class RabbitsGrassSimulationModel extends SimModelImpl {
 		    Object2DDisplay displayAgents = new Object2DDisplay(rgSpace.getCurrentAgentSpace());
 		    displayAgents.setObjectList(agentList);
 
-		    displaySurf.addDisplayableProbeable(displayGrass, "Grass");
+//		    displaySurf.addDisplayable(displayGrass, "Grass");
+//			displaySurf.addDisplayable(displayAgents, "Agents");
+  			displaySurf.addDisplayableProbeable(displayGrass, "Grass");
 			displaySurf.addDisplayableProbeable(displayAgents, "Agents");
 		}
 
