@@ -8,7 +8,7 @@ import uchicago.src.sim.space.Object2DGrid;
 public class RabbitsGrassSimulationSpace {
 	private Object2DGrid grassSpace;
 	private Object2DGrid agentSpace;
-	private int spaceAvailable = 0;
+	int spaceAvailable = 0;
 	
 	
 	public RabbitsGrassSimulationSpace(int xSize, int ySize){
@@ -107,11 +107,11 @@ public class RabbitsGrassSimulationSpace {
 		return grass;
 	}
 	
-	public boolean moveAgentAt(int x, int y, int newX, int newY){
+	public boolean moveAgentAt(int x, int y, int newX, int newY) {
 		boolean retVal = false;
-		if(!isCellOccupied(newX, newY)){
-			RabbitsGrassSimulationAgent rga = (RabbitsGrassSimulationAgent)agentSpace.getObjectAt(x, y);
-			removeAgentAt(x,y);
+		if (!isCellOccupied(newX, newY)) {
+			RabbitsGrassSimulationAgent rga = (RabbitsGrassSimulationAgent) agentSpace.getObjectAt(x, y);
+			removeAgentAt(x, y);
 			rga.setXY(newX, newY);
 			agentSpace.putObjectAt(newX, newY, rga);
 			spaceAvailable--;

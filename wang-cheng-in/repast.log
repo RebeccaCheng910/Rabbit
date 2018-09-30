@@ -1,4 +1,4 @@
-Invalid Parameter for NumAgents
+Invalid Parameter for GrassGrowthRate
 Invalid Parameter: int or Integer expected
 uchicago.src.reflector.InvokerException: Invalid Parameter: int or Integer expected
 	at uchicago.src.reflector.IntegerArgInvoker.check(Unknown Source)

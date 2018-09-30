@@ -1,6 +1,9 @@
 import java.awt.Color;
 import java.util.ArrayList;
 
+import uchicago.src.sim.analysis.DataSource;
+import uchicago.src.sim.analysis.OpenSequenceGraph;
+import uchicago.src.sim.analysis.Sequence;
 import uchicago.src.sim.engine.BasicAction;
 import uchicago.src.sim.engine.Schedule;
 import uchicago.src.sim.engine.SimInit;
@@ -21,25 +24,18 @@ import uchicago.src.sim.util.SimUtilities;
  */
 
 
-public class RabbitsGrassSimulationModel extends SimModelImpl {		
-		private Schedule schedule;
-		
-		private RabbitsGrassSimulationSpace rgSpace;
-		
-		private DisplaySurface displaySurf;
-		
-		private ArrayList agentList;
+public class RabbitsGrassSimulationModel extends SimModelImpl {
 		
 		// Default Values
-	    private static final int NUMAGENTS = 100;
-	    private static final int WORLDXSIZE = 40;
-	    private static final int WORLDYSIZE = 40;
-	    private static final int AGENT_START_LIFE = 100;
-	    private static final int REPRODLEVEL = 130;
-	    private static final int REPRODCOST = 50;
-	    private static final int TOTALGRASS = 170;
-	    private static final int GRASS_GROWTH_RATE = 20;
-		  
+		private static final int NUMAGENTS = 100;
+		private static final int WORLDXSIZE = 20;
+		private static final int WORLDYSIZE = 20;
+		private static final int AGENT_START_LIFE = 90;
+		private static final int REPRODLEVEL = 100;
+		private static final int REPRODCOST = 10;
+		private static final int TOTALGRASS = 20;
+		private static final int GRASS_GROWTH_RATE = 3;
+
 		private int numAgents = NUMAGENTS;
 		private int worldXSize = WORLDXSIZE;
 		private int worldYSize = WORLDYSIZE;
@@ -48,8 +44,49 @@ public class RabbitsGrassSimulationModel extends SimModelImpl {
 		private int agentReproductionEnergyCost = REPRODCOST;
 		private int totalGrass = TOTALGRASS;
 		private int grassGrowthRate = GRASS_GROWTH_RATE;
-		
-		
+
+        private Schedule schedule;
+
+        private RabbitsGrassSimulationSpace rgSpace;
+
+        private DisplaySurface displaySurf;
+
+        private ArrayList agentList;
+
+        private OpenSequenceGraph population;
+
+        private OpenSequenceGraph grass_plot;
+
+        class rabbitInSpace implements DataSource, Sequence {
+
+            public Object execute() {
+                return new Double(getSValue());
+            }
+
+            public double getSValue() {
+                //return (double)rgSpace.getTotalRabbit();
+                return agentList.size();
+            }
+        }
+
+        class grassInSpace implements DataSource, Sequence {
+
+            public Object execute() {
+                return new Double(getSValue());
+            }
+
+            public double getSValue() {
+
+            	int numAgents = agentList.size();
+            	int totalArea = rgSpace.getCurrentGrassSpace().getSizeX() *
+						rgSpace.getCurrentGrassSpace().getSizeY();
+				int spaceAval = rgSpace.spaceAvailable; // = totalArea - totalRabbit - totalGrass
+				// therefore totalGrass = totalAval - totalRabbit - spaceAval
+
+				return totalArea - spaceAval - numAgents;
+            }
+        }
+
 		public static void main(String[] args) {
 			
 			System.out.println("Rabbit skeleton");
@@ -64,6 +101,8 @@ public class RabbitsGrassSimulationModel extends SimModelImpl {
 			buildDisplay();
 			
 			displaySurf.display();
+			population.display();
+			grass_plot.display();
 		}
 		
 		public void buildModel() {
@@ -122,7 +161,8 @@ public class RabbitsGrassSimulationModel extends SimModelImpl {
 		            for(int i =0; i < agentSize; i++){
 		            	RabbitsGrassSimulationAgent rga = (RabbitsGrassSimulationAgent)agentList.get(i);
 		            	rga.step();
-		            	
+		            	//rga.report();
+
 		            	if(rga.getCurrentLife() >= agentReproductionLevel) {
 		            		if (addNewAgent()) {
 		            			rga.reproduce();
@@ -143,7 +183,24 @@ public class RabbitsGrassSimulationModel extends SimModelImpl {
 		    	}
 		    }
 		    schedule.scheduleActionAtInterval(10, new RabbitsGrassStimulationCountLiving());
-		}
+
+            class rgUpdatePopulationInSpace extends BasicAction {
+                public void execute(){
+                    population.step();
+                }
+            }
+
+            schedule.scheduleActionAtInterval(10, new rgUpdatePopulationInSpace());
+
+            class rgUpdateGrassInSpace extends BasicAction {
+                public void execute(){
+                    grass_plot.step();
+                }
+            }
+
+            schedule.scheduleActionAtInterval(10, new rgUpdateGrassInSpace());
+
+        }
 		
 		public void buildDisplay() {
 			System.out.println("Running BuildDisplay");
@@ -163,6 +220,9 @@ public class RabbitsGrassSimulationModel extends SimModelImpl {
 
 		    displaySurf.addDisplayableProbeable(displayGrass, "Grass");
 			displaySurf.addDisplayableProbeable(displayAgents, "Agents");
+
+			population.addSequence("Population", new rabbitInSpace());
+			grass_plot.addSequence("Grass Count", new grassInSpace());
 		}
 
 		public String getName() {
@@ -185,13 +245,29 @@ public class RabbitsGrassSimulationModel extends SimModelImpl {
 			      displaySurf.dispose();
 			}
 			displaySurf = null;
-			displaySurf = new DisplaySurface(this, "Rabbit Sim Model Window 1");
-			
+
+			if (population != null) {
+			    population.dispose();
+            }
+            population = null;
+
+            if (grass_plot != null) {
+                grass_plot.dispose();
+            }
+            grass_plot = null;
+
+
+            displaySurf = new DisplaySurface(this, "Rabbit Sim Model Window 1");
+			population = new OpenSequenceGraph("Population", this);
+            grass_plot = new OpenSequenceGraph("Grass Count", this);
+
 			registerDisplaySurface("Rabbit Sim Model Window 1", displaySurf);
-		}
+		    this.registerMediaProducer("Population ", population);
+            this.registerMediaProducer("Grass Count", grass_plot);
+        }
 		
 		public String[] getInitParam() {
-			String[] initParams = {"NumAgents", "WorldXSize", "WorldYSize", "TotalGrass", "GrassGrowthRate", "AgentStartLife"};
+			String[] initParams = {"NumAgents", "WorldXSize", "WorldYSize", "GrassGrowthRate", "AgentReproductionLevel" };
 			return initParams;
 		}
 		

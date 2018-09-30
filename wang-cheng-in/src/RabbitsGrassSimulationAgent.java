@@ -97,11 +97,9 @@ public class RabbitsGrassSimulationAgent implements Drawable {
 
 	    if(tryMove(newX, newY)){
 			currentLife += rgSpace.takeGrassAt(x,y);
+			currentLife--;
 	    }
-	    else {
-	    	setVxVy();
-	    }
-	    currentLife--;
+	    setVxVy();
 	}
 	
 	public void reproduce() {
