@@ -36,9 +36,9 @@ public class RabbitsGrassSimulationModel extends SimModelImpl {
 	    private static final int WORLDYSIZE = 40;
 	    private static final int AGENT_START_LIFE = 100;
 	    private static final int REPRODLEVEL = 130;
-	    private static final int REPRODCOST = 30;
+	    private static final int REPRODCOST = 50;
 	    private static final int TOTALGRASS = 170;
-	    private static final int GRASS_GROWTH_RATE = 50;
+	    private static final int GRASS_GROWTH_RATE = 20;
 		  
 		private int numAgents = NUMAGENTS;
 		private int worldXSize = WORLDXSIZE;
@@ -81,10 +81,13 @@ public class RabbitsGrassSimulationModel extends SimModelImpl {
 		      }			
 		}
 		
-		private void addNewAgent(){
+		private boolean addNewAgent(){
 			RabbitsGrassSimulationAgent a = new RabbitsGrassSimulationAgent(agentStartLife, agentReproductionLevel, agentReproductionEnergyCost);
-			rgSpace.addAgent(a);
-			agentList.add(a);
+			boolean retVal = rgSpace.addAgent(a);
+			if(retVal) {
+				agentList.add(a);
+			}
+			return retVal;
 		}
 		
 		private void reapDeadAgents() {
@@ -115,13 +118,15 @@ public class RabbitsGrassSimulationModel extends SimModelImpl {
 		    class RabbitsGrassStimulationStep extends BasicAction {
 		    	public void execute() {
 		            SimUtilities.shuffle(agentList);
-		            for(int i =0; i < agentList.size(); i++){
+		            int agentSize = agentList.size();
+		            for(int i =0; i < agentSize; i++){
 		            	RabbitsGrassSimulationAgent rga = (RabbitsGrassSimulationAgent)agentList.get(i);
+		            	rga.step();
+		            	
 		            	if(rga.getCurrentLife() >= agentReproductionLevel) {
-		            		rga.reproduce();
-		            		addNewAgent();
-		            	} else {
-		            		rga.step();
+		            		if (addNewAgent()) {
+		            			rga.reproduce();
+		            		}
 		            	}
 		            }
 		            reapDeadAgents();

@@ -8,10 +8,13 @@ import uchicago.src.sim.space.Object2DGrid;
 public class RabbitsGrassSimulationSpace {
 	private Object2DGrid grassSpace;
 	private Object2DGrid agentSpace;
+	private int spaceAvailable = 0;
+	
 	
 	public RabbitsGrassSimulationSpace(int xSize, int ySize){
 		grassSpace = new Object2DGrid(xSize, ySize);
 		agentSpace = new Object2DGrid(xSize, ySize);
+		spaceAvailable = xSize * ySize;
 	    for(int i = 0; i < xSize; i++){
 	      for(int j = 0; j < ySize; j++){
 	    	  grassSpace.putObjectAt(i,j,new Integer(0));
@@ -20,9 +23,8 @@ public class RabbitsGrassSimulationSpace {
 	}
 	
 	public void spreadGrass(int totalGrass){
-	    // Randomly place money in moneySpace
 		int i = 0;
-		while (i < totalGrass) {
+		while ((i < totalGrass) && (spaceAvailable > 0)) {
 	
 	      // Choose coordinates
 	      int x = (int)(Math.random()*(grassSpace.getSizeX()));
@@ -31,7 +33,8 @@ public class RabbitsGrassSimulationSpace {
 	      // Get the value of the object at those coordinates
 	      int currentValue = getGrassAt(x, y);
 	      if (currentValue == 0) {
-	    	  grassSpace.putObjectAt(x,y,new Integer(1));
+	    	  grassSpace.putObjectAt(x,y,new Integer(5));
+	    	  spaceAvailable--;
 		      ++i;
 	      } else {
 	    	  continue;
@@ -74,31 +77,33 @@ public class RabbitsGrassSimulationSpace {
 	
 	public boolean addAgent(RabbitsGrassSimulationAgent agent) {
 		boolean retVal = false;
-	    int count = 0;
-	    int countLimit = 10 * agentSpace.getSizeX() * agentSpace.getSizeY();
 	    
-	    while((retVal==false) && (count < countLimit)){ 
+	    while((retVal==false) && (spaceAvailable > 0)){ 
 	    	int x = (int)(Math.random()*(agentSpace.getSizeX()));
 	        int y = (int)(Math.random()*(agentSpace.getSizeY()));
 	        if(isCellOccupied(x,y) == false){
 	            agentSpace.putObjectAt(x,y,agent);
+	            spaceAvailable--;
 	            agent.setXY(x,y);
 	            retVal = true;
 	            agent.setRabbitsGrassSimulationSpace(this);
-	          }
-	        count++;
+	        }
 	    }
 	    return retVal;
 	}
 	
 	public void removeAgentAt(int x, int y){
 		agentSpace.putObjectAt(x, y, null);
+		spaceAvailable++;
 	}
 
 	
 	public int takeGrassAt(int x, int y){
 		int grass = getGrassAt(x, y);
 		grassSpace.putObjectAt(x, y, new Integer(0));
+		if (grass > 0) {
+			spaceAvailable++;
+		}
 		return grass;
 	}
 	
@@ -109,6 +114,7 @@ public class RabbitsGrassSimulationSpace {
 			removeAgentAt(x,y);
 			rga.setXY(newX, newY);
 			agentSpace.putObjectAt(newX, newY, rga);
+			spaceAvailable--;
 			retVal = true;
 		}
 		return retVal;

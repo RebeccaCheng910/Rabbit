@@ -52,7 +52,8 @@ public class RabbitsGrassSimulationAgent implements Drawable {
 	public void setVxVy() {
 		vX = 0;
 		vY = 0;
-		while((vX == 0) && ( vY == 0)){
+		while(((vX == 0) && ( vY == 0)) || ((vX == 1) && ( vY == 1)) || ((vX == -1) && ( vY == -1))
+				|| ((vX == 1) && ( vY == -1)) || ((vX == -1) && ( vY == 1))){
 			vX = (int)Math.floor(Math.random() * 3) - 1;
 			vY = (int)Math.floor(Math.random() * 3) - 1;
 		}
